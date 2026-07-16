@@ -24,11 +24,11 @@
                         display: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     colors: {
-                        'pu-dark': '#0b1121', /* Deeper Slate */
+                        'pu-dark': '#0b1121', 
                         'pu-panel': '#151e32',
-                        'pu-blue': '#1e40af', /* Blue 800 */
-                        'pu-yellow': '#eab308', /* Yellow 500 */
-                        'pu-accent': '#3b82f6', /* Blue 500 */
+                        'pu-blue': '#1e40af', 
+                        'pu-yellow': '#eab308', 
+                        'pu-accent': '#3b82f6', 
                     },
                     animation: {
                         'blob': 'blob 10s infinite',
@@ -58,13 +58,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
-        
-        .glass-input {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
 
-        /* Subtle Inner Glow for panels */
         .glow-border {
             position: relative;
         }
@@ -92,7 +86,6 @@
             <div class="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-pu-blue rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-blob"></div>
             <div class="absolute bottom-[-20%] right-[-10%] w-[35rem] h-[35rem] bg-pu-accent rounded-full mix-blend-screen filter blur-[100px] opacity-20 animate-blob" style="animation-delay: 2s;"></div>
             <div class="absolute top-[30%] left-[40%] w-[25rem] h-[25rem] bg-pu-yellow rounded-full mix-blend-screen filter blur-[120px] opacity-10 animate-blob" style="animation-delay: 4s;"></div>
-            <!-- Grid overlay -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-60"></div>
         </div>
 
@@ -141,41 +134,19 @@
                         <p class="text-xs text-slate-400">Bantuan Teknis Perencanaan</p>
                     </div>
                 </div>
-                <div class="glass-card glow-border p-4 rounded-2xl flex items-start gap-4 transition-transform hover:-translate-y-1 duration-300">
-                    <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
-                        <i class="ph ph-crane text-xl text-amber-400"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-semibold mb-1">Bantek Konstruksi</h4>
-                        <p class="text-xs text-slate-400">Pelaksanaan & Pengawasan</p>
-                    </div>
-                </div>
-                <div class="glass-card glow-border p-4 rounded-2xl flex items-start gap-4 transition-transform hover:-translate-y-1 duration-300">
-                    <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
-                        <i class="ph ph-chart-bar text-xl text-purple-400"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-semibold mb-1">E-Anggaran</h4>
-                        <p class="text-xs text-slate-400">Rekomendasi Kebutuhan Biaya</p>
-                    </div>
-                </div>
             </div>
         </div>
 
         <!-- Footer Left -->
         <div class="relative z-10 flex items-center justify-between text-sm text-slate-500 animate-fade-in-up" style="animation-delay: 0.4s;">
             <p>&copy; 2026 Dinas PUPR Kabupaten Garut.</p>
-            <div class="flex gap-4">
-                <a href="#" class="hover:text-white transition-colors">Bantuan</a>
-                <a href="#" class="hover:text-white transition-colors">Kontak Kami</a>
-            </div>
         </div>
     </div>
 
     <!-- RIGHT PANEL: Login Form -->
     <div class="w-full lg:w-5/12 xl:w-1/3 flex flex-col items-center justify-center p-6 sm:p-12 relative bg-slate-900/40 lg:border-l border-white/5 backdrop-blur-xl">
         
-        <!-- Mobile Header (Visible only on small screens) -->
+        <!-- Mobile Header -->
         <div class="lg:hidden flex flex-col items-center mb-10 text-center animate-fade-in-up">
             <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pu-blue to-pu-dark border border-white/10 flex items-center justify-center shadow-lg mb-4">
                 <i class="ph-fill ph-buildings text-3xl text-pu-yellow"></i>
@@ -188,7 +159,6 @@
         <div class="w-full max-w-md animate-fade-in-up" style="animation-delay: 0.1s;">
             <div class="glass-card glow-border rounded-[2rem] p-8 sm:p-10">
                 
-                <!-- Welcome Text -->
                 <div class="mb-8 text-center lg:text-left">
                     <h3 class="font-display text-2xl font-bold text-white mb-2">Selamat Datang</h3>
                     <p class="text-sm text-slate-400 leading-relaxed">
@@ -196,23 +166,20 @@
                     </p>
                 </div>
 
-                <!-- Alert Banner -->
                 <div class="bg-blue-900/20 border border-blue-500/20 rounded-xl p-4 flex gap-3 items-start mb-6">
                     <i class="ph-fill ph-info text-blue-400 mt-0.5 text-lg shrink-0"></i>
                     <p class="text-[13px] text-blue-200/80 leading-relaxed">
-                        Akses khusus menggunakan akun <span class="font-semibold text-blue-100">@garutkab.go.id</span> atau akun Gmail eksternal yang telah diverifikasi.
+                        Akses khusus menggunakan akun <span class="font-semibold text-blue-100">@garutkab.go.id</span> atau akun Gmail eksternal yang diverifikasi.
                     </p>
                 </div>
 
                 <!-- SSO Button -->
                 <button id="btn-sso-google" class="w-full relative group overflow-hidden rounded-xl bg-white text-slate-800 font-semibold text-sm px-4 py-3.5 flex items-center justify-center gap-3 transition-all duration-300 hover:bg-slate-50 hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] focus:outline-none focus:ring-2 focus:ring-pu-yellow focus:ring-offset-2 focus:ring-offset-pu-panel disabled:opacity-70 disabled:cursor-not-allowed">
-                    <!-- Loading Spinner -->
                     <svg id="spinner" class="animate-spin hidden w-5 h-5 text-slate-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     
-                    <!-- Google Logo -->
                     <svg id="google-icon" class="w-5 h-5 shrink-0 transition-transform group-hover:scale-110" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -222,18 +189,10 @@
 
                     <span id="btn-text">Lanjutkan dengan Google</span>
                 </button>
-
-                <!-- Terms -->
-                <div class="mt-8 text-center lg:text-left">
-                    <p class="text-[11px] text-slate-500 leading-relaxed">
-                        Dengan melanjutkan, Anda menyetujui <a href="#" class="text-pu-yellow hover:underline">Ketentuan Layanan</a> dan mengakui bahwa Anda telah membaca <a href="#" class="text-pu-yellow hover:underline">Kebijakan Privasi</a> kami.
-                    </p>
-                </div>
             </div>
             
-            <!-- Back to Home Link -->
             <div class="mt-8 text-center">
-                <a href="javascript:history.back()" class="inline-flex items-center text-sm font-medium text-slate-400 hover:text-white transition-colors group">
+                <a href="beranda.html" class="inline-flex items-center text-sm font-medium text-slate-400 hover:text-white transition-colors group">
                     <i class="ph ph-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
                     Kembali ke Beranda Pelayanan
                 </a>
@@ -242,54 +201,85 @@
 
     </div>
 
-    <!-- Interactive Script -->
+    <!-- SUPABASE INTEGRATION SCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // --- KONFIGURASI SUPABASE ---
+        // Ganti string ini dengan URL dan KEY Supabase Anda saat siap deploy
+        const SUPABASE_URL = 'https://aojkrxuzjlzudkfojlxi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvamtyeHV6amx6dWRrZm9qbHhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3Njg3NTAsImV4cCI6MjA5OTM0NDc1MH0.cHCPbleLuTtEWsASmNx_7uWfuohCSiYSKYtPhyOWYEg';
+
+        // Pengecekan apakah URL sudah diisi (menghindari error saat dicoba tanpa config)
+        const isConfigured = SUPABASE_URL.includes('supabase.co') && !SUPABASE_URL.includes('ISI_DENGAN');
+        
+        let supabaseClient = null;
+        if (isConfigured) {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const btnSso = document.getElementById('btn-sso-google');
             const btnText = document.getElementById('btn-text');
             const googleIcon = document.getElementById('google-icon');
             const spinner = document.getElementById('spinner');
 
-            btnSso.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                // UI Feedback
-                btnSso.disabled = true;
-                btnText.textContent = 'Mengarahkan...';
-                googleIcon.classList.add('hidden');
-                spinner.classList.remove('hidden');
+            function setUiLoading(isLoading) {
+                btnSso.disabled = isLoading;
+                if (isLoading) {
+                    btnText.textContent = 'Mengarahkan ke Google...';
+                    googleIcon.classList.add('hidden');
+                    spinner.classList.remove('hidden');
+                } else {
+                    btnText.textContent = 'Lanjutkan dengan Google';
+                    googleIcon.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                }
+            }
 
-                // Simulation Delay
-                setTimeout(() => {
-                    btnText.textContent = 'Menunggu Autentikasi...';
-                    
-                    setTimeout(() => {
-                        // Reset UI
-                        btnSso.disabled = false;
-                        btnText.textContent = 'Lanjutkan dengan Google';
-                        googleIcon.classList.remove('hidden');
-                        spinner.classList.add('hidden');
+            btnSso.addEventListener('click', async (e) => {
+                e.preventDefault();
+                setUiLoading(true);
+
+                if (isConfigured && supabaseClient) {
+                    // Eksekusi Login Supabase
+                    try {
+                        const { data, error } = await supabaseClient.auth.signInWithOAuth({
+                            provider: 'google',
+                            options: {
+                                // Akan mengarahkan kembali ke dashboard.html setelah login sukses
+                                redirectTo: window.location.origin + '/dashboard.html'
+                            }
+                        });
+
+                        if (error) throw error;
                         
-                        // Show modal for demo
+                        // Note: Jika berhasil, browser akan langsung pindah ke halaman akun Google,
+                        // sehingga kode di bawah ini biasanya tidak sempat tereksekusi.
+
+                    } catch (error) {
+                        console.error('Error otentikasi:', error.message);
+                        alert('Gagal menghubungkan ke server otentikasi. Periksa koneksi Anda.');
+                        setUiLoading(false);
+                    }
+                } else {
+                    // Fallback Simulasi (Jika variabel Supabase belum diisi)
+                    setTimeout(() => {
                         const modal = document.createElement('div');
                         modal.innerHTML = `
                             <div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                                <div class="glass-card glow-border rounded-2xl p-8 max-w-sm w-full shadow-2xl transform scale-100 transition-transform">
-                                    <div class="w-16 h-16 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                                        <i class="ph ph-shield-check text-3xl"></i>
+                                <div class="glass-card glow-border rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center">
+                                    <div class="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-500/30">
+                                        <i class="ph ph-warning text-3xl"></i>
                                     </div>
-                                    <h3 class="font-display text-white font-bold text-center text-xl mb-2">Autentikasi Terhubung</h3>
-                                    <p class="text-sm text-slate-300 text-center mb-8 leading-relaxed">
-                                        Di lingkungan produksi, proses ini akan memanggil Endpoint OAuth API untuk verifikasi sesi Anda.
-                                    </p>
-                                    <button onclick="this.parentElement.parentElement.remove()" class="w-full bg-pu-blue hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors">Mengerti</button>
+                                    <h3 class="font-display text-white font-bold text-lg mb-2">Supabase Belum Dikonfigurasi</h3>
+                                    <p class="text-sm text-slate-300 mb-6">Untuk menghubungkan ke Google, silakan ganti <b>SUPABASE_URL</b> dan <b>SUPABASE_ANON_KEY</b> di dalam file HTML ini.</p>
+                                    <button onclick="this.parentElement.parentElement.remove(); document.getElementById('btn-sso-google').disabled = false; document.getElementById('btn-text').textContent = 'Lanjutkan dengan Google'; document.getElementById('google-icon').classList.remove('hidden'); document.getElementById('spinner').classList.add('hidden');" class="bg-pu-blue text-white px-6 py-2 rounded-xl">Mengerti</button>
                                 </div>
                             </div>
                         `;
                         document.body.appendChild(modal);
-                    }, 1500);
-
-                }, 1000);
+                    }, 1000);
+                }
             });
         });
     </script>
