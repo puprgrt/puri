@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS - Portal SSO PUPR Garut</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        'hud-bg': '#020617', /* Very dark slate */
+                        'hud-panel': '#0f172a',
+                        'neon-blue': '#38bdf8', /* Cyan/Light Blue */
+                        'neon-yellow': '#facc15',
+                        'neon-pu': '#2563eb',
+                    },
+                    animation: {
+                        'scanline': 'scanline 8s linear infinite',
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        scanline: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100vh)' },
+                        },
+                        pulseGlow: {
+                            '0%': { opacity: 0.3, filter: 'blur(20px)' },
+                            '100%': { opacity: 0.7, filter: 'blur(30px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #020617;
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* Tech Background Grid */
+        .tech-grid {
+            position: fixed;
+            inset: 0;
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Futuristic HUD Nav */
+        .hud-nav {
+            background: rgba(2, 6, 23, 0.6);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255,255,255,0.05) inset;
+        }
+
+        /* --- MAGIC MOUSE TRACKING GLOW CARDS --- */
+        #cards-container:hover > .tech-card::after {
+            opacity: 1;
+        }
+
+        .tech-card {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-radius: 1.5rem;
+            position: relative;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            /* Base border */
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .tech-card:hover {
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.3);
+            z-index: 10;
+        }
+
+        /* The glowing border effect that follows mouse */
+        .tech-card::before,
+        .tech-card::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 500ms;
+            pointer-events: none;
+        }
+
+        /* Hover light inside */
+        .tech-card::before {
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(255, 255, 255, 0.06),
+                transparent 40%
+            );
+            z-index: 3;
+        }
+
+        /* Hover light on border (requires padding trick, using inset shadow instead for clean look) */
+        .tech-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Inner content container to maintain 3D pop */
+        .tech-card-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            transform: translateZ(30px); /* Pops out in 3D */
+            transition: transform 0.3s ease;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 3px; }
+    </style>
+</head>
+<body class="font-sans text-slate-300 antialiased selection:bg-neon-blue selection:text-hud-bg min-h-screen relative">
+
+    <!-- 1. Boot Sequence Loader (Terminal Style) -->
+    <div id="boot-loader" class="fixed inset-0 z-[100] bg-hud-bg flex flex-col items-start justify-center p-8 sm:p-20 transition-opacity duration-1000">
+        <div class="max-w-2xl w-full">
+            <div class="flex items-center gap-3 mb-6 opacity-80">
+                <i class="ph-fill ph-cpu text-3xl text-neon-blue animate-pulse"></i>
+                <span class="font-mono text-neon-blue tracking-widest text-sm">PUPR_NEXUS_OS // V.26.04</span>
+            </div>
+            <div id="terminal-text" class="font-mono text-sm sm:text-base text-emerald-400 leading-relaxed min-h-[150px]">
+                <!-- Text will be typed here by JS -->
+            </div>
+            <div id="access-granted" class="mt-8 hidden opacity-0 transform translate-y-4 transition-all duration-500">
+                <div class="inline-flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 px-6 py-3 rounded-lg text-emerald-400 font-bold tracking-widest uppercase">
+                    <i class="ph-fill ph-fingerprint text-2xl"></i> Otorisasi Berhasil
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Futuristic Background Elements -->
+    <div class="tech-grid"></div>
+    <!-- Moving Scanline -->
+    <div class="fixed top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-neon-blue to-transparent opacity-50 shadow-[0_0_15px_rgba(56,189,248,0.8)] animate-scanline pointer-events-none z-[1]"></div>
+    <!-- Ambient Glows -->
+    <div class="fixed top-1/4 left-1/4 w-96 h-96 bg-neon-blue rounded-full mix-blend-screen opacity-10 blur-[100px] pointer-events-none z-0"></div>
+    <div class="fixed bottom-1/4 right-1/4 w-96 h-96 bg-neon-yellow rounded-full mix-blend-screen opacity-5 blur-[100px] pointer-events-none z-0"></div>
+
+    <!-- 3. HUD Navigation Bar -->
+    <nav class="hud-nav fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Brand (Tech Look) -->
+                <div class="flex items-center gap-4 group">
+                    <div class="w-12 h-12 bg-hud-bg rounded-lg flex items-center justify-center border border-neon-blue/30 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-neon-blue/10 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <i class="ph-fill ph-hexagon text-3xl text-neon-yellow relative z-10"></i>
+                        <i class="ph-bold ph-buildings absolute text-hud-bg text-sm z-20"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-display font-black text-xl text-white tracking-widest leading-none">NEXUS<span class="text-neon-blue">.</span></span>
+                        <span class="font-mono text-[9px] text-neon-blue/70 uppercase tracking-[0.2em] mt-1">Global Dashboard</span>
+                    </div>
+                </div>
+
+                <!-- User Profile (Data Node Look) -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden sm:flex flex-col text-right mr-2 font-mono">
+                        <span class="text-xs text-neon-blue uppercase tracking-wider">Ahmad Surveyor</span>
+                        <span class="text-[10px] text-slate-500">ID: GARUT-942X</span>
+                    </div>
+                    <div class="relative group cursor-pointer">
+                        <div class="w-10 h-10 bg-slate-800 border border-neon-blue/50 overflow-hidden relative" style="clip-path: polygon(30% 0%, 100% 0, 100% 70%, 70% 100%, 0 100%, 0% 30%);">
+                            <img src="https://ui-avatars.com/api/?name=Ahmad+Surveyor&background=020617&color=38bdf8" alt="User" class="w-full h-full object-cover">
+                        </div>
+                        <!-- Status indicator -->
+                        <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-400 rounded-sm shadow-[0_0_10px_#34d399] animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 4. Main Content: App Launcher -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 opacity-0" id="main-content" style="transition: opacity 1s ease 0.5s;">
+        
+        <!-- Header Info (Sci-Fi Layout) -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-white/10 pb-6">
+            <div>
+                <div class="font-mono text-[10px] text-neon-blue tracking-[0.3em] uppercase mb-2">System // Mainframe // Access</div>
+                <h1 class="font-display text-4xl font-bold text-white mb-2 tracking-tight">Katalog Modul</h1>
+                <p class="text-slate-400 font-mono text-sm">Pilih sub-sistem untuk memulai inisiasi koneksi.</p>
+            </div>
+            
+            <div class="flex flex-col gap-1 text-right">
+                <span class="font-mono text-xs text-emerald-400 flex items-center justify-end gap-2">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-sm animate-pulse"></span> SECURE CONNECTION ACTIVE
+                </span>
+                <span class="font-mono text-[10px] text-slate-500">ENCRYPTION: RSA-2048</span>
+            </div>
+        </div>
+
+        <!-- Apps Grid (The Interactive Cards) -->
+        <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 perspective-[1000px]">
+
+            <!-- App 1: SI-PEKA (Real Link) -->
+            <a href="https://si-peka-820728979520.asia-southeast1.run.app/" target="_blank" rel="noopener noreferrer" class="tech-card p-6 md:p-8 flex flex-col justify-between min-h-[220px]">
+                <div class="tech-card-content">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="w-12 h-12 bg-hud-bg border border-neon-blue/30 rounded-lg flex items-center justify-center text-neon-blue shadow-[0_0_15px_rgba(56,189,248,0.2)]">
+                            <i class="ph-bold ph-magnifying-glass text-2xl"></i>
+                        </div>
+                        <span class="font-mono text-[10px] text-slate-500 border border-slate-700 px-2 py-1 rounded bg-hud-bg/50">SYS.01</span>
+                    </div>
+                    
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-white mb-2 tracking-wide">SI-PEKA</h3>
+                        <p class="text-xs font-mono text-slate-400 line-clamp-2">Analisis & Penilaian Kerusakan Bangunan Tingkat Lanjut.</p>
+                    </div>
+
+                    <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+                        <span class="font-mono text-[10px] text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">ONLINE</span>
+                        <i class="ph-bold ph-arrow-up-right text-slate-500"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- App 2: Bantek Perencanaan -->
+            <a href="#" class="tech-card p-6 md:p-8 flex flex-col justify-between min-h-[220px]">
+                <div class="tech-card-content">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="w-12 h-12 bg-hud-bg border border-emerald-400/30 rounded-lg flex items-center justify-center text-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.2)]">
+                            <i class="ph-bold ph-compass-drafting text-2xl"></i>
+                        </div>
+                        <span class="font-mono text-[10px] text-slate-500 border border-slate-700 px-2 py-1 rounded bg-hud-bg/50">SYS.02</span>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-white mb-2 tracking-wide">Bantek Rencana</h3>
+                        <p class="text-xs font-mono text-slate-400 line-clamp-2">Modul Verifikasi & Simulasi Dokumen Perencanaan Infrastruktur.</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+                        <span class="font-mono text-[10px] text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">ONLINE</span>
+                        <i class="ph-bold ph-arrow-up-right text-slate-500"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- App 3: Bantek Konstruksi -->
+            <a href="#" class="tech-card p-6 md:p-8 flex flex-col justify-between min-h-[220px]">
+                <div class="tech-card-content">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="w-12 h-12 bg-hud-bg border border-neon-yellow/30 rounded-lg flex items-center justify-center text-neon-yellow shadow-[0_0_15px_rgba(250,204,21,0.2)]">
+                            <i class="ph-bold ph-crane text-2xl"></i>
+                        </div>
+                        <span class="font-mono text-[10px] text-slate-500 border border-slate-700 px-2 py-1 rounded bg-hud-bg/50">SYS.03</span>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-white mb-2 tracking-wide">Bantek Konstruksi</h3>
+                        <p class="text-xs font-mono text-slate-400 line-clamp-2">Sistem Monitoring Pelaksanaan & Evaluasi Mutu Lapangan.</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+                        <span class="font-mono text-[10px] text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">ONLINE</span>
+                        <i class="ph-bold ph-arrow-up-right text-slate-500"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- App 4: Rekomendasi Anggaran -->
+            <a href="#" class="tech-card p-6 md:p-8 flex flex-col justify-between min-h-[220px]">
+                <div class="tech-card-content">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="w-12 h-12 bg-hud-bg border border-purple-400/30 rounded-lg flex items-center justify-center text-purple-400 shadow-[0_0_15px_rgba(192,132,252,0.2)]">
+                            <i class="ph-bold ph-coins text-2xl"></i>
+                        </div>
+                        <span class="font-mono text-[10px] text-slate-500 border border-slate-700 px-2 py-1 rounded bg-hud-bg/50">SYS.04</span>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-white mb-2 tracking-wide">E-Anggaran</h3>
+                        <p class="text-xs font-mono text-slate-400 line-clamp-2">Generator Rekomendasi Kebutuhan Biaya & Kalkulasi RAB.</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+                        <span class="font-mono text-[10px] text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">ONLINE</span>
+                        <i class="ph-bold ph-arrow-up-right text-slate-500"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- App 5: Assessment -->
+            <a href="#" class="tech-card p-6 md:p-8 flex flex-col justify-between min-h-[220px]">
+                <div class="tech-card-content">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="w-12 h-12 bg-hud-bg border border-rose-400/30 rounded-lg flex items-center justify-center text-rose-400 shadow-[0_0_15px_rgba(251,113,133,0.2)]">
+                            <i class="ph-bold ph-clipboard-text text-2xl"></i>
+                        </div>
+                        <span class="font-mono text-[10px] text-slate-500 border border-slate-700 px-2 py-1 rounded bg-hud-bg/50">SYS.05</span>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-white mb-2 tracking-wide">Assessment Core</h3>
+                        <p class="text-xs font-mono text-slate-400 line-clamp-2">Algoritma Penilaian Kelayakan Infrastruktur Terpadu.</p>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between border-t border-white/5 pt-4">
+                        <span class="font-mono text-[10px] text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">SYNCING...</span>
+                        <i class="ph-bold ph-arrow-up-right text-slate-500"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Request Access (Dashed Style) -->
+            <div class="p-6 md:p-8 flex flex-col items-center justify-center text-center border border-dashed border-slate-700 rounded-1xl cursor-not-allowed hover:bg-white/5 transition-colors min-h-[220px]">
+                <i class="ph-bold ph-lock-key text-3xl text-slate-600 mb-4"></i>
+                <h3 class="font-mono text-sm font-bold text-slate-500 mb-2 uppercase">Restricted Area</h3>
+                <p class="text-[10px] font-mono text-slate-600">Request Level-2 Clearance to System Admin to unlock additional modules.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Interactive Scripts for Futuristic FX -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. BOOT SEQUENCE TERMINAL LOGIC ---
+            const bootTexts = [
+                "> Establishing secure handshake protocol...",
+                "> Connecting to identity provider (Google)...",
+                "> Retrieving user profile...",
+                "> Validating JSON Web Tokens (JWT)...",
+                "> Mapping roles: [ADMIN_PU, SURVEYOR]",
+                "> Decrypting session storage...",
+                "> ALL SYSTEMS GREEN."
+            ];
+            
+            const terminalEl = document.getElementById('terminal-text');
+            const loaderEl = document.getElementById('boot-loader');
+            const mainContent = document.getElementById('main-content');
+            const grantedEl = document.getElementById('access-granted');
+            
+            let lineIndex = 0;
+
+            function typeLines() {
+                if (lineIndex < bootTexts.length) {
+                    const line = document.createElement('div');
+                    line.textContent = bootTexts[lineIndex];
+                    line.className = 'mb-1 opacity-0 transition-opacity duration-100';
+                    terminalEl.appendChild(line);
+                    
+                    // Small delay to fade in the line
+                    setTimeout(() => { line.style.opacity = 1; }, 50);
+
+                    lineIndex++;
+                    // Random typing delay between lines (100ms - 400ms) for realistic feel
+                    setTimeout(typeLines, Math.random() * 300 + 100);
+                } else {
+                    // Finished typing
+                    setTimeout(() => {
+                        grantedEl.classList.remove('hidden');
+                        setTimeout(() => { grantedEl.classList.remove('opacity-0', 'translate-y-4'); }, 50);
+                        
+                        // Hide loader and show main content
+                        setTimeout(() => {
+                            loaderEl.style.opacity = '0';
+                            setTimeout(() => {
+                                loaderEl.remove();
+                                mainContent.style.opacity = '1';
+                            }, 1000);
+                        }, 1500);
+                    }, 400);
+                }
+            }
+
+            // Start boot sequence
+            typeLines();
+
+            // --- 2. 3D HOVER TILT & FLASHLIGHT GLOW LOGIC ---
+            const cardsContainer = document.getElementById('cards-container');
+            const cards = document.querySelectorAll('.tech-card');
+
+            // Mouse tracking for glowing border/background effect
+            cardsContainer.onmousemove = e => {
+                for(const card of document.getElementsByClassName("tech-card")) {
+                    const rect = card.getBoundingClientRect(),
+                          x = e.clientX - rect.left,
+                          y = e.clientY - rect.top;
+
+                    card.style.setProperty("--mouse-x", `${x}px`);
+                    card.style.setProperty("--mouse-y", `${y}px`);
+                }
+            }
+
+            // 3D Tilt effect
+            cards.forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left; // x position within the element
+                    const y = e.clientY - rect.top;  // y position within the element
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -8; // Max rotation 8deg
+                    const rotateY = ((x - centerX) / centerX) * 8;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
