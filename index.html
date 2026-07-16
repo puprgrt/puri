@@ -1,38 +1,39 @@
+```html
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pusat Pelayanan Publik PUPR Garut</title>
+    <title>Portal Pelayanan Publik - PUPR Garut</title>
     
-    <!-- Fonts: Plus Jakarta Sans for a modern, Indonesian government standard look -->
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Phosphor Icons for modern minimalist icons -->
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Tailwind Config for Custom PU Colors -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     colors: {
-                        pu: {
-                            blue: '#005baa',
-                            yellow: '#fec00f',
-                            dark: '#0a192f', // Deep navy for background
-                        }
+                        'pu-dark': '#0b1121', /* Deeper Slate */
+                        'pu-panel': '#151e32',
+                        'pu-blue': '#1e40af', /* Blue 800 */
+                        'pu-yellow': '#eab308', /* Yellow 500 */
+                        'pu-accent': '#3b82f6', /* Blue 500 */
                     },
                     animation: {
                         'blob': 'blob 10s infinite',
+                        'float': 'float 6s ease-in-out infinite',
                     },
                     keyframes: {
                         blob: {
@@ -40,518 +41,357 @@
                             '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
                             '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
                             '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
             }
         }
     </script>
-
     <style>
         body {
-            background-color: #0a192f;
-            color: #ffffff;
-            overflow-x: hidden;
+            background-color: #0b1121;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(234, 179, 8, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
         }
 
         /* Glassmorphism Utilities */
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
+        .glass-nav {
+            background: rgba(11, 17, 33, 0.7);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
         
-        .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
-        }
-
         .glass-card:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(234, 179, 8, 0.3); /* PU Yellow glow on hover */
             transform: translateY(-5px);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
-            border-color: rgba(254, 192, 15, 0.5); /* PU Yellow border on hover */
+            box-shadow: 0 10px 40px -10px rgba(234, 179, 8, 0.2);
         }
 
-        /* Animated Background Blobs */
-        .bg-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
+        /* Inner Glow */
+        .glow-border {
+            position: relative;
+        }
+        .glow-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
             pointer-events: none;
         }
-
-        .shape {
-            position: absolute;
-            filter: blur(100px);
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: blob 15s infinite alternate ease-in-out;
-        }
-
-        .shape-1 {
-            top: -10%;
-            left: -10%;
-            width: 50vw;
-            height: 50vw;
-            background: #005baa; /* PU Blue */
-            animation-delay: 0s;
-        }
-
-        .shape-2 {
-            bottom: -20%;
-            right: -10%;
-            width: 60vw;
-            height: 60vw;
-            background: rgba(254, 192, 15, 0.3); /* PU Yellow but softer */
-            animation-delay: 2s;
-        }
-
-        .shape-3 {
-            top: 40%;
-            left: 40%;
-            width: 40vw;
-            height: 40vw;
-            background: rgba(0, 91, 170, 0.5);
-            animation-delay: 4s;
-        }
-
+        
         /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a192f;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #005baa;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #fec00f;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b1121; }
+        ::-webkit-scrollbar-thumb { background: #1e40af; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
     </style>
 </head>
-<body class="antialiased relative selection:bg-pu-yellow selection:text-pu-dark">
+<body class="font-sans text-slate-300 antialiased selection:bg-pu-yellow selection:text-pu-dark flex flex-col min-h-screen">
 
-    <div class="bg-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-    </div>
-
-    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
-        <div class="glass mx-4 mt-4 mb-2 rounded-2xl px-6 py-3 max-w-7xl lg:mx-auto lg:mt-6">
-            <div class="flex items-center justify-between">
-                <!-- Logos -->
+    <!-- Navigation -->
+    <nav class="glass-nav fixed w-full z-50 top-0 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo & Brand -->
                 <div class="flex items-center gap-3">
-                    <img src="https://drive.google.com/file/d/1LpT2rpCFIfI50BMLdiB54u2IyZb52GuA/view?usp=drive_link" alt="Logo Garut" class="w-10 h-auto drop-shadow-md">
-                    <!-- PU Logo representation (Text for better alignment, can be replaced with img) -->
-                    <div class="hidden sm:block border-l-2 border-white/20 pl-3">
-                        <h1 class="text-lg font-bold leading-tight tracking-wide text-white">DPUPR</h1>
-                        <p class="text-xs text-pu-yellow font-medium tracking-wider">KAB. GARUT</p>
+                    <div class="w-10 h-10 bg-gradient-to-br from-pu-yellow to-amber-600 rounded-xl flex items-center justify-center shadow-lg border border-white/20">
+                        <!-- Placeholder for Garut Logo -->
+                        <i class="ph-fill ph-shield-star text-2xl text-pu-dark"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-display font-bold text-lg text-white leading-tight">PUPR Garut</span>
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Pelayanan Publik</span>
                     </div>
                 </div>
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#beranda" class="text-sm font-medium hover:text-pu-yellow transition-colors">Beranda</a>
-                    <a href="#layanan" class="text-sm font-medium hover:text-pu-yellow transition-colors">Layanan Publik</a>
-                    <a href="#alur" class="text-sm font-medium hover:text-pu-yellow transition-colors">Alur Proses</a>
-                    <a href="#kontak" class="text-sm font-medium hover:text-pu-yellow transition-colors">Kontak</a>
+                    <a href="#beranda" class="text-sm font-medium text-white hover:text-pu-yellow transition-colors">Beranda</a>
+                    <a href="#layanan" class="text-sm font-medium text-slate-300 hover:text-pu-yellow transition-colors">Layanan</a>
+                    <a href="#informasi" class="text-sm font-medium text-slate-300 hover:text-pu-yellow transition-colors">Informasi</a>
+                    <a href="#kontak" class="text-sm font-medium text-slate-300 hover:text-pu-yellow transition-colors">Kontak</a>
                 </div>
 
-                <!-- Action Button -->
+                <!-- SSO Login Button -->
                 <div class="hidden md:flex">
-                    <button class="bg-pu-yellow hover:bg-yellow-400 text-pu-dark font-bold py-2 px-6 rounded-full text-sm transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(254,192,15,0.4)]">
-                        Portal Login <i class="ph ph-arrow-right ml-1"></i>
+                    <a href="login.html" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-pu-dark bg-pu-yellow rounded-lg hover:bg-yellow-400 transition-all shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:shadow-[0_0_25px_rgba(234,179,8,0.5)]">
+                        <i class="ph ph-sign-in mr-2 text-lg"></i>
+                        Masuk SSO
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button class="text-slate-300 hover:text-white focus:outline-none">
+                        <i class="ph ph-list text-2xl"></i>
                     </button>
                 </div>
-
-                <!-- Mobile Menu Button -->
-                <button class="md:hidden text-white hover:text-pu-yellow focus:outline-none" id="mobile-menu-btn">
-                    <i class="ph ph-list text-3xl"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Mobile Menu Panel -->
-        <div class="md:hidden hidden mx-4 glass rounded-xl mt-2 p-4" id="mobile-menu">
-            <div class="flex flex-col space-y-4 text-center">
-                <a href="#beranda" class="text-sm font-medium hover:text-pu-yellow transition-colors">Beranda</a>
-                <a href="#layanan" class="text-sm font-medium hover:text-pu-yellow transition-colors">Layanan Publik</a>
-                <a href="#alur" class="text-sm font-medium hover:text-pu-yellow transition-colors">Alur Proses</a>
-                <a href="#kontak" class="text-sm font-medium hover:text-pu-yellow transition-colors">Kontak</a>
-                <button class="bg-pu-yellow text-pu-dark font-bold py-2 px-6 rounded-full text-sm w-full mt-4">
-                    Portal Login
-                </button>
             </div>
         </div>
     </nav>
 
-    <section id="beranda" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6 lg:px-8 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between min-h-screen">
-        <div class="w-full lg:w-3/5 z-10 text-center lg:text-left mb-12 lg:mb-0">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 border border-pu-yellow/30 text-pu-yellow text-xs sm:text-sm font-medium">
-                <span class="relative flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pu-yellow opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-pu-yellow"></span>
-                </span>
-                Sistem Terpadu Pelayanan Infrastruktur
-            </div>
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-                Pusat Pelayanan Publik <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-pu-yellow to-yellow-200">Dinas PUPR Garut</span>
-            </h1>
-            <p class="text-slate-300 text-base sm:text-lg mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                Akses cepat, transparan, dan profesional untuk berbagai layanan penilaian, perencanaan, pengawasan konstruksi, hingga assessment aset infrastruktur di Kabupaten Garut.
-            </p>
-            <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-                <a href="#layanan" class="w-full sm:w-auto bg-pu-blue hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-full transition-all shadow-[0_0_20px_rgba(0,91,170,0.5)] transform hover:-translate-y-1 text-center">
-                    Jelajahi Layanan
-                </a>
-                <a href="#panduan" class="w-full sm:w-auto glass hover:bg-white/10 text-white font-medium py-3 px-8 rounded-full transition-all flex items-center justify-center gap-2">
-                    <i class="ph ph-play-circle text-xl"></i> Panduan Sistem
-                </a>
-            </div>
-            
-            <!-- Quick Stats in Hero -->
-            <div class="grid grid-cols-3 gap-4 mt-12 pt-8 border-t border-white/10">
-                <div>
-                    <h3 class="text-3xl font-bold text-pu-yellow">5+</h3>
-                    <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Jenis Layanan</p>
-                </div>
-                <div>
-                    <h3 class="text-3xl font-bold text-white">100%</h3>
-                    <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Digitalisasi</p>
-                </div>
-                <div>
-                    <h3 class="text-3xl font-bold text-white">24/7</h3>
-                    <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider">Aksesibilitas</p>
-                </div>
-            </div>
-        </div>
+    <!-- Background Blobs for Hero -->
+    <div class="absolute top-0 left-0 w-full h-screen overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[50rem] h-[50rem] bg-pu-blue rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[40rem] h-[40rem] bg-pu-accent rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-blob" style="animation-delay: 2s;"></div>
+    </div>
 
-        <div class="w-full lg:w-2/5 z-10 relative">
-            <!-- Hero Decorative Image/Glass Element -->
-            <div class="glass p-6 rounded-3xl relative animate-[float_6s_ease-in-out_infinite]">
-                <div class="absolute -inset-1 bg-gradient-to-r from-pu-blue to-pu-yellow rounded-3xl blur opacity-30"></div>
-                <div class="relative bg-slate-900/50 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-                    <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-pu-blue/20 flex items-center justify-center text-pu-blue">
-                                <i class="ph ph-shield-check text-2xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-sm">Status Sistem</h4>
-                                <p class="text-xs text-green-400">Online & Beroperasi</p>
-                            </div>
-                        </div>
-                        <i class="ph ph-dots-three text-2xl text-slate-400"></i>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="h-10 bg-white/5 rounded-lg w-full flex items-center px-4 gap-3">
-                            <i class="ph ph-check-circle text-pu-yellow"></i>
-                            <div class="h-2 bg-white/20 rounded w-1/2"></div>
-                        </div>
-                        <div class="h-10 bg-white/5 rounded-lg w-full flex items-center px-4 gap-3">
-                            <i class="ph ph-check-circle text-pu-yellow"></i>
-                            <div class="h-2 bg-white/20 rounded w-3/4"></div>
-                        </div>
-                        <div class="h-10 bg-white/5 rounded-lg w-full flex items-center px-4 gap-3">
-                            <i class="ph ph-spinner animate-spin text-pu-blue"></i>
-                            <div class="h-2 bg-white/20 rounded w-2/3"></div>
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-white/10 flex justify-between items-center text-xs text-slate-400">
-                        <span>Pembaruan terakhir: Baru saja</span>
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Aman</span>
-                    </div>
+    <!-- Main Content -->
+    <main class="flex-grow relative z-10 pt-20">
+        
+        <!-- Hero Section -->
+        <section id="beranda" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 lg:pt-32 lg:pb-32 flex flex-col lg:flex-row items-center gap-12">
+            <!-- Text Content -->
+            <div class="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 text-xs font-medium mb-6 backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Sistem Terintegrasi Online
                 </div>
-            </div>
-            
-            <!-- Floating Elements -->
-            <div class="absolute -top-10 -right-10 glass p-4 rounded-2xl border-pu-yellow/30 shadow-xl animate-[float_5s_ease-in-out_infinite_reverse]">
-                <i class="ph ph-hard-hat text-4xl text-pu-yellow"></i>
-            </div>
-            <div class="absolute -bottom-5 -left-5 glass p-4 rounded-2xl border-pu-blue/30 shadow-xl animate-[float_7s_ease-in-out_infinite]">
-                <i class="ph ph-buildings text-4xl text-pu-blue"></i>
-            </div>
-        </div>
-    </section>
-
-    <section id="layanan" class="py-20 relative z-10">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-sm font-bold text-pu-yellow tracking-widest uppercase mb-2">Katalog Layanan</h2>
-                <h3 class="text-3xl md:text-4xl font-bold mb-4">Layanan Publik <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pu-blue">Utama</span></h3>
-                <p class="text-slate-400 max-w-2xl mx-auto">Pilih layanan yang Anda butuhkan. Sistem kami dirancang untuk memproses pengajuan Anda secara efisien, akurat, dan sesuai dengan standar teknis Kementerian PUPR.</p>
-            </div>
-
-            <!-- CSS Grid for the 5 Services -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                
-                <!-- Service 1 -->
-                <div class="glass-card rounded-2xl p-8 group cursor-pointer">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pu-blue to-blue-800 flex items-center justify-center mb-6 shadow-lg transform group-hover:-rotate-6 transition-transform">
-                        <i class="ph ph-house-line text-3xl text-white"></i>
-                <div class="absolute -bottom-1 -right-1 bg-red-500 rounded-full w-4 h-4 border-2 border-[#0a192f]"></div>
-            </div>
-            <h4 class="text-xl font-bold mb-3 text-white group-hover:text-pu-yellow transition-colors">Penilaian Kerusakan</h4>
-            <p class="text-sm text-slate-300 leading-relaxed mb-6">Evaluasi komprehensif, audit fisik, dan dokumentasi tingkat kerusakan bangunan gedung atau infrastruktur lainnya untuk tindak lanjut mitigasi.</p>
-            <a href="https://sipeka-production.up.railway.app/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-sm font-medium text-pu-blue group-hover:text-pu-yellow transition-colors">
-                Ajukan Layanan <i class="ph ph-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-            </a>
-        </div>
-
-        <!-- Service 2 -->
-                <div class="glass-card rounded-2xl p-8 group cursor-pointer">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pu-yellow to-yellow-600 flex items-center justify-center mb-6 shadow-lg transform group-hover:-rotate-6 transition-transform">
-                        <i class="ph ph-blueprint text-3xl text-pu-dark"></i>
-                    </div>
-                    <h4 class="text-xl font-bold mb-3 text-white group-hover:text-pu-yellow transition-colors">Bantek Pengecekan Perencanaan</h4>
-                    <p class="text-sm text-slate-300 leading-relaxed mb-6">Bantuan teknis untuk reviu, validasi, dan pengesahan dokumen perencanaan teknis (DED) agar memenuhi standar konstruksi yang berlaku.</p>
-                    <a href="#" class="inline-flex items-center text-sm font-medium text-pu-yellow transition-colors">
-                        Ajukan Layanan <i class="ph ph-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.1] text-white mb-6">
+                    Pusat Pelayanan <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-pu-yellow to-amber-300">Publik Infrastruktur</span>
+                </h1>
+                <p class="text-lg text-slate-400 mb-8 max-w-xl leading-relaxed">
+                    Akses layanan Dinas Pekerjaan Umum dan Penataan Ruang Kabupaten Garut secara terpadu. Mulai dari penilaian kerusakan hingga rekomendasi anggaran, kini lebih cepat dan transparan.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    <a href="#layanan" class="inline-flex justify-center items-center px-6 py-3.5 text-sm font-semibold text-white bg-pu-blue rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-900/50">
+                        Jelajahi Layanan
+                        <i class="ph ph-arrow-down ml-2 text-lg"></i>
+                    </a>
+                    <a href="login.html" class="inline-flex justify-center items-center px-6 py-3.5 text-sm font-semibold text-slate-200 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors backdrop-blur-md">
+                        Masuk via SSO Google
                     </a>
                 </div>
-
-                <!-- Service 3 -->
-                <div class="glass-card rounded-2xl p-8 group cursor-pointer">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pu-blue to-blue-800 flex items-center justify-center mb-6 shadow-lg transform group-hover:-rotate-6 transition-transform">
-                        <i class="ph ph-crane text-3xl text-white"></i>
-                    </div>
-                    <h4 class="text-xl font-bold mb-3 text-white group-hover:text-pu-yellow transition-colors">Bantek Pelaksanaan Konstruksi</h4>
-                    <p class="text-sm text-slate-300 leading-relaxed mb-6">Pendampingan teknis dan supervisi selama masa pelaksanaan konstruksi untuk menjamin kualitas, mutu, dan spesifikasi tercapai.</p>
-                    <a href="#" class="inline-flex items-center text-sm font-medium text-pu-blue group-hover:text-pu-yellow transition-colors">
-                        Ajukan Layanan <i class="ph ph-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                    </a>
-                </div>
-
-                <!-- Service 4 -->
-                <div class="glass-card rounded-2xl p-8 group cursor-pointer md:col-start-1 lg:col-start-auto lg:col-span-1">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pu-yellow to-yellow-600 flex items-center justify-center mb-6 shadow-lg transform group-hover:-rotate-6 transition-transform">
-                        <i class="ph ph-calculator text-3xl text-pu-dark"></i>
-                    </div>
-                    <h4 class="text-xl font-bold mb-3 text-white group-hover:text-pu-yellow transition-colors">Rekomendasi Kebutuhan Anggaran</h4>
-                    <p class="text-sm text-slate-300 leading-relaxed mb-6">Analisis presisi untuk Rencana Anggaran Biaya (RAB) dan Justifikasi Teknis (Justek) untuk optimasi alokasi anggaran proyek infrastruktur.</p>
-                    <a href="#" class="inline-flex items-center text-sm font-medium text-pu-yellow transition-colors">
-                        Ajukan Layanan <i class="ph ph-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                    </a>
-                </div>
-
-                <!-- Service 5 -->
-                <div class="glass-card rounded-2xl p-8 group cursor-pointer md:col-start-2 lg:col-start-auto lg:col-span-1">
-                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-pu-blue to-blue-800 flex items-center justify-center mb-6 shadow-lg transform group-hover:-rotate-6 transition-transform">
-                        <i class="ph ph-clipboard-text text-3xl text-white"></i>
-                    </div>
-                    <h4 class="text-xl font-bold mb-3 text-white group-hover:text-pu-yellow transition-colors">Assessment Terpadu</h4>
-                    <p class="text-sm text-slate-300 leading-relaxed mb-6">Pengkajian kelayakan struktur, analisis fungsi bangunan, dan evaluasi kepatuhan teknis (SLF) atas aset-aset strategis pemerintah daerah.</p>
-                    <a href="#" class="inline-flex items-center text-sm font-medium text-pu-blue group-hover:text-pu-yellow transition-colors">
-                        Ajukan Layanan <i class="ph ph-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
-                    </a>
-                </div>
-
             </div>
-        </div>
-    </section>
 
-    <section id="alur" class="py-20 relative z-10 bg-black/20 border-y border-white/5">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-center gap-12">
-                <div class="lg:w-1/2">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Proses Pelayanan <br><span class="text-pu-yellow">Mudah & Transparan</span></h2>
-                    <p class="text-slate-400 mb-8 leading-relaxed">
-                        Kami mengutamakan efisiensi dan kejelasan. Pantau status pengajuan Anda secara real-time melalui dashboard portal kami.
-                    </p>
-                    
-                    <div class="space-y-6">
-                        <!-- Step 1 -->
-                        <div class="flex gap-4">
-                            <div class="flex flex-col items-center">
-                                <div class="w-10 h-10 rounded-full bg-pu-blue text-white flex items-center justify-center font-bold z-10 shadow-[0_0_10px_rgba(0,91,170,0.8)]">1</div>
-                                <div class="w-0.5 h-full bg-white/10 my-1"></div>
-                            </div>
-                            <div class="pb-6">
-                                <h4 class="text-lg font-bold text-white mb-1">Registrasi & Pengajuan</h4>
-                                <p class="text-sm text-slate-400">Buat akun, pilih jenis layanan, dan unggah dokumen persyaratan yang diminta sistem.</p>
-                            </div>
+            <!-- Hero Image/Graphic -->
+            <div class="w-full lg:w-1/2 relative animate-float">
+                <div class="glass-card glow-border rounded-3xl p-6 relative z-10 bg-slate-800/40">
+                    <img src="https://images.unsplash.com/photo-1541888081643-eb80c85c34e7?q=80&w=1000&auto=format&fit=crop" alt="Infrastruktur Garut" class="rounded-2xl w-full h-[300px] object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700" />
+                    <!-- Floating Badge -->
+                    <div class="absolute -bottom-6 -left-6 glass-card glow-border rounded-2xl p-4 flex items-center gap-4 bg-slate-900/80">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                            <i class="ph-fill ph-check-circle text-2xl text-emerald-400"></i>
                         </div>
-                        <!-- Step 2 -->
-                        <div class="flex gap-4">
-                            <div class="flex flex-col items-center">
-                                <div class="w-10 h-10 rounded-full glass border-pu-yellow text-pu-yellow flex items-center justify-center font-bold z-10">2</div>
-                                <div class="w-0.5 h-full bg-white/10 my-1"></div>
-                            </div>
-                            <div class="pb-6">
-                                <h4 class="text-lg font-bold text-white mb-1">Verifikasi & Penjadwalan</h4>
-                                <p class="text-sm text-slate-400">Tim teknis PUPR akan memverifikasi berkas dan menjadwalkan peninjauan lokasi (jika diperlukan).</p>
-                            </div>
-                        </div>
-                        <!-- Step 3 -->
-                        <div class="flex gap-4">
-                            <div class="flex flex-col items-center">
-                                <div class="w-10 h-10 rounded-full glass text-white flex items-center justify-center font-bold z-10">3</div>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold text-white mb-1">Penerbitan Rekomendasi</h4>
-                                <p class="text-sm text-slate-400">Hasil penilaian/rekomendasi teknis diterbitkan secara digital dan dapat diunduh.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="lg:w-1/2 w-full">
-                    <div class="glass-card rounded-2xl p-6 md:p-8 relative overflow-hidden">
-                        <!-- Abstract overlay -->
-                        <div class="absolute -right-20 -top-20 w-64 h-64 bg-pu-yellow/10 rounded-full blur-3xl"></div>
-                        <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-pu-blue/20 rounded-full blur-3xl"></div>
-                        
-                        <h4 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="ph ph-file-text text-pu-yellow text-2xl"></i> Cek Status Dokumen</h4>
-                        <p class="text-sm text-slate-300 mb-6">Masukkan nomor resi pengajuan Anda untuk melacak progress layanan saat ini.</p>
-                        
-                        <form class="space-y-4 relative z-10">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-400 mb-1">Nomor Resi / Tiket</label>
-                                <input type="text" placeholder="Contoh: BANTEK-2023-0091" class="w-full bg-slate-900/50 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-pu-yellow focus:ring-1 focus:ring-pu-yellow transition-colors">
-                            </div>
-                            <button type="button" class="w-full bg-white text-pu-dark font-bold py-3 px-4 rounded-xl hover:bg-slate-200 transition-colors flex justify-center items-center gap-2">
-                                <i class="ph ph-magnifying-glass"></i> Lacak Sekarang
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer id="kontak" class="pt-20 pb-10 relative z-10 bg-slate-950/80 border-t border-white/10 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-16">
-                
-                <div class="lg:col-span-1">
-                    <div class="flex items-center gap-3 mb-6">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Lambang_Kabupaten_Garut.png" alt="Logo Garut" class="w-12 h-auto drop-shadow-md">
                         <div>
-                            <h2 class="text-xl font-bold text-white">DPUPR</h2>
-                            <p class="text-sm text-pu-yellow font-medium">Kabupaten Garut</p>
+                            <p class="text-white font-bold text-lg">5 Layanan</p>
+                            <p class="text-xs text-slate-400">Terintegrasi SSO</p>
                         </div>
                     </div>
-                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
-                        Pusat Pelayanan Publik untuk mendukung percepatan dan kualitas infrastruktur di Kabupaten Garut.
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Grid Section -->
+        <section id="layanan" class="py-20 bg-slate-900/30 border-t border-white/5 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-4">Layanan Publik Utama</h2>
+                    <p class="text-slate-400">Pilih layanan yang Anda butuhkan. Semua layanan di bawah ini telah terintegrasi dengan sistem Single Sign-On (SSO).</p>
+                </div>
+
+                <!-- 5 Services Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Service 1: SI-PEKA (Featured) -->
+                    <a href="https://si-peka-820728979520.asia-southeast1.run.app/" target="_blank" rel="noopener noreferrer" class="glass-card glow-border rounded-2xl p-8 group relative overflow-hidden lg:col-span-2 lg:row-span-1 border-pu-blue/30 bg-pu-blue/5">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-pu-blue rounded-bl-full opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                        <div class="flex items-start justify-between mb-6 relative z-10">
+                            <div class="w-14 h-14 rounded-xl bg-pu-blue/20 flex items-center justify-center border border-pu-blue/30 text-pu-accent group-hover:scale-110 transition-transform">
+                                <i class="ph ph-magnifying-glass text-3xl"></i>
+                            </div>
+                            <span class="px-3 py-1 bg-pu-yellow text-pu-dark text-xs font-bold rounded-full">Populer</span>
+                        </div>
+                        <div class="relative z-10">
+                            <h3 class="font-display text-xl font-bold text-white mb-2 group-hover:text-pu-yellow transition-colors">Penilaian Kerusakan (SI-PEKA)</h3>
+                            <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                                Sistem Informasi Penilaian Kerusakan. Layanan evaluasi komprehensif, audit fisik, dan dokumentasi tingkat kerusakan bangunan gedung untuk tindak lanjut mitigasi.
+                            </p>
+                            <div class="inline-flex items-center text-sm font-medium text-pu-accent group-hover:text-pu-yellow transition-colors">
+                                Akses Aplikasi <i class="ph ph-arrow-up-right ml-2"></i>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Service 2: Bantek Perencanaan -->
+                    <a href="#" class="glass-card glow-border rounded-2xl p-8 group">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 text-emerald-400 mb-6 group-hover:scale-110 transition-transform">
+                            <i class="ph ph-compass-drafting text-2xl"></i>
+                        </div>
+                        <h3 class="font-display text-lg font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Bantek Pengecekan Perencanaan</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                            Bantuan teknis untuk verifikasi, validasi, dan pengecekan dokumen perencanaan infrastruktur sebelum tahap konstruksi.
+                        </p>
+                        <div class="inline-flex items-center text-sm font-medium text-slate-300 group-hover:text-emerald-400 transition-colors mt-auto">
+                            Selengkapnya <i class="ph ph-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+
+                    <!-- Service 3: Bantek Konstruksi -->
+                    <a href="#" class="glass-card glow-border rounded-2xl p-8 group">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-400 mb-6 group-hover:scale-110 transition-transform">
+                            <i class="ph ph-crane text-2xl"></i>
+                        </div>
+                        <h3 class="font-display text-lg font-bold text-white mb-2 group-hover:text-amber-400 transition-colors">Bantek Pelaksanaan Konstruksi</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                            Pendampingan dan bantuan teknis pengawasan pada saat pelaksanaan konstruksi di lapangan untuk memastikan standar kualitas.
+                        </p>
+                        <div class="inline-flex items-center text-sm font-medium text-slate-300 group-hover:text-amber-400 transition-colors">
+                            Selengkapnya <i class="ph ph-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+
+                    <!-- Service 4: Rekomendasi Anggaran -->
+                    <a href="#" class="glass-card glow-border rounded-2xl p-8 group">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20 text-purple-400 mb-6 group-hover:scale-110 transition-transform">
+                            <i class="ph ph-coins text-2xl"></i>
+                        </div>
+                        <h3 class="font-display text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Rekomendasi Kebutuhan Anggaran</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                            Layanan penyusunan dan penerbitan rekomendasi Rencana Anggaran Biaya (RAB) teknis untuk proyek pembangunan.
+                        </p>
+                        <div class="inline-flex items-center text-sm font-medium text-slate-300 group-hover:text-purple-400 transition-colors">
+                            Selengkapnya <i class="ph ph-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+
+                    <!-- Service 5: Assessment -->
+                    <a href="#" class="glass-card glow-border rounded-2xl p-8 group">
+                        <div class="w-12 h-12 rounded-xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20 text-rose-400 mb-6 group-hover:scale-110 transition-transform">
+                            <i class="ph ph-clipboard-text text-2xl"></i>
+                        </div>
+                        <h3 class="font-display text-lg font-bold text-white mb-2 group-hover:text-rose-400 transition-colors">Assessment Infrastruktur</h3>
+                        <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                            Penilaian kelayakan, uji fungsi, dan asesmen menyeluruh terhadap infrastruktur existing di wilayah Kabupaten Garut.
+                        </p>
+                        <div class="inline-flex items-center text-sm font-medium text-slate-300 group-hover:text-rose-400 transition-colors">
+                            Selengkapnya <i class="ph ph-arrow-right ml-2"></i>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Info/SSO Banner Section -->
+        <section id="informasi" class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="glass-card glow-border rounded-[2rem] p-8 md:p-12 relative overflow-hidden bg-gradient-to-r from-pu-blue/20 to-pu-dark border-pu-blue/30 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <!-- Decor -->
+                    <div class="absolute right-0 top-0 w-64 h-64 bg-pu-yellow rounded-full mix-blend-screen filter blur-[100px] opacity-10"></div>
+                    
+                    <div class="relative z-10 max-w-2xl text-center md:text-left">
+                        <h3 class="font-display text-2xl md:text-3xl font-bold text-white mb-4">Terintegrasi dengan Satu Akun</h3>
+                        <p class="text-slate-300 leading-relaxed">
+                            Tidak perlu lagi menghafal banyak kata sandi. Cukup gunakan akun Google <b>@garutkab.go.id</b> Anda untuk mengakses seluruh layanan aplikasi PUPR melalui SSO (Single Sign-On).
+                        </p>
+                    </div>
+                    
+                    <div class="relative z-10 shrink-0">
+                        <a href="login.html" class="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-pu-dark bg-pu-yellow rounded-xl hover:bg-white hover:text-pu-blue transition-all shadow-[0_0_20px_rgba(234,179,8,0.4)]">
+                            <i class="ph-fill ph-lock-key mr-2 text-xl"></i>
+                            Login SSO Sekarang
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="kontak" class="border-t border-white/10 bg-[#070b16] pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 mb-12">
+                
+                <!-- Brand Info -->
+                <div class="md:col-span-5 lg:col-span-4">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-pu-yellow rounded-lg flex items-center justify-center">
+                            <i class="ph-fill ph-shield-star text-pu-dark"></i>
+                        </div>
+                        <span class="font-display font-bold text-lg text-white">PUPR Garut</span>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                        Pusat Pelayanan Publik Terpadu Dinas Pekerjaan Umum dan Penataan Ruang Kabupaten Garut. Mewujudkan infrastruktur yang handal dan terintegrasi.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-white hover:text-pu-yellow hover:border-pu-yellow transition-colors">
-                            <i class="ph ph-facebook-logo text-xl"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-white hover:text-pu-yellow hover:border-pu-yellow transition-colors">
-                            <i class="ph ph-instagram-logo text-xl"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full glass flex items-center justify-center text-white hover:text-pu-yellow hover:border-pu-yellow transition-colors">
-                            <i class="ph ph-youtube-logo text-xl"></i>
-                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-pu-blue hover:text-white transition-colors border border-white/10"><i class="ph-fill ph-facebook-logo text-lg"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-pu-blue hover:text-white transition-colors border border-white/10"><i class="ph-fill ph-instagram-logo text-lg"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-pu-blue hover:text-white transition-colors border border-white/10"><i class="ph-fill ph-youtube-logo text-lg"></i></a>
                     </div>
                 </div>
 
-                <div>
-                    <h4 class="text-white font-bold mb-6">Layanan Cepat</h4>
+                <!-- Quick Links -->
+                <div class="md:col-span-3 lg:col-span-2 lg:col-start-7">
+                    <h4 class="text-white font-bold mb-6">Tautan Cepat</h4>
                     <ul class="space-y-3 text-sm text-slate-400">
-                        <li><a href="https://si-peka-820728979520.asia-southeast1.run.app/" target="_blank" rel="noopener noreferrer" class="hover:text-pu-yellow transition-colors">Penilaian Kerusakan</a></li>
-                        <li><a href="#" class="hover:text-pu-yellow transition-colors">Bantek Perencanaan</a></li>
-                        <li><a href="#" class="hover:text-pu-yellow transition-colors">Bantek Konstruksi</a></li>
-                        <li><a href="#" class="hover:text-pu-yellow transition-colors">Rekomendasi Anggaran</a></li>
-                        <li><a href="#" class="hover:text-pu-yellow transition-colors">Assessment</a></li>
+                        <li><a href="#beranda" class="hover:text-pu-yellow transition-colors">Beranda</a></li>
+                        <li><a href="#layanan" class="hover:text-pu-yellow transition-colors">Layanan Publik</a></li>
+                        <li><a href="login.html" class="hover:text-pu-yellow transition-colors">Login SSO</a></li>
+                        <li><a href="#" class="hover:text-pu-yellow transition-colors">Panduan Sistem</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h4 class="text-white font-bold mb-6">Tautan Penting</h4>
-                    <ul class="space-y-3 text-sm text-slate-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Profil Dinas</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Berita & Pengumuman</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Standar Operasional (SOP)</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Kebijakan Privasi</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Bantuan/FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div>
+                <!-- Contact -->
+                <div class="md:col-span-4 lg:col-span-4">
                     <h4 class="text-white font-bold mb-6">Hubungi Kami</h4>
                     <ul class="space-y-4 text-sm text-slate-400">
                         <li class="flex items-start gap-3">
-                            <i class="ph ph-map-pin text-pu-yellow text-xl shrink-0 mt-0.5"></i>
-                            <span>Jl. Raya Samarang No. 115, Tarogong Kaler, Kabupaten Garut, Jawa Barat 44151</span>
+                            <i class="ph-fill ph-map-pin text-pu-yellow text-lg shrink-0 mt-0.5"></i>
+                            <span class="leading-relaxed">Jl. Raya Samarang No.115, Tarogong Kidul, Kabupaten Garut, Jawa Barat 44151</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <i class="ph ph-phone text-pu-yellow text-xl shrink-0"></i>
-                            <span>(0262) 232111</span>
+                            <i class="ph-fill ph-phone text-pu-yellow text-lg shrink-0"></i>
+                            <span>(0262) 232000</span>
                         </li>
                         <li class="flex items-center gap-3">
-                            <i class="ph ph-envelope-simple text-pu-yellow text-xl shrink-0"></i>
-                            <span>pelayanan.pupr@garutkab.go.id</span>
+                            <i class="ph-fill ph-envelope-simple text-pu-yellow text-lg shrink-0"></i>
+                            <span>layanan@pupr.garutkab.go.id</span>
                         </li>
                     </ul>
                 </div>
-
             </div>
 
-            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-sm text-slate-500">
-                    &copy; <span id="year"></span> Dinas Pekerjaan Umum dan Penataan Ruang Kabupaten Garut. All rights reserved.
+            <!-- Copyright -->
+            <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-slate-500">
+                    &copy; 2026 Dinas Pekerjaan Umum dan Penataan Ruang Kab. Garut. Hak Cipta Dilindungi.
                 </p>
-                <div class="flex items-center gap-2 text-sm text-slate-500">
-                    <span>Designed with</span> <i class="ph-fill ph-heart text-red-500"></i> <span>for Garut</span>
+                <div class="flex gap-4 text-xs text-slate-500">
+                    <a href="#" class="hover:text-white transition-colors">Syarat & Ketentuan</a>
+                    <a href="#" class="hover:text-white transition-colors">Kebijakan Privasi</a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script>
-        // Set current year in footer
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Mobile menu toggle
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
-
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
-
-        // Add float animation via CSS dynamically added above, 
-        // Handle navbar background on scroll for glass effect enhancement
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            const glassContainer = nav.querySelector('.glass');
-            
-            if (window.scrollY > 20) {
-                // When scrolled, we make the glass container slightly more opaque and tight to top
-                glassContainer.classList.remove('mx-4', 'mt-4', 'lg:mx-auto', 'lg:mt-6', 'rounded-2xl');
-                glassContainer.classList.add('w-full', 'rounded-none', 'border-x-0', 'border-t-0');
-                nav.classList.add('shadow-lg');
-            } else {
-                // Top of page
-                glassContainer.classList.add('mx-4', 'mt-4', 'lg:mx-auto', 'lg:mt-6', 'rounded-2xl');
-                glassContainer.classList.remove('w-full', 'rounded-none', 'border-x-0', 'border-t-0');
-                nav.classList.remove('shadow-lg');
-            }
-        });
-
-        // Close mobile menu when clicking a link
-        const mobileLinks = menu.querySelectorAll('a');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                menu.classList.add('hidden');
-            });
-        });
-    </script>
 </body>
 </html>
+
+
+```
